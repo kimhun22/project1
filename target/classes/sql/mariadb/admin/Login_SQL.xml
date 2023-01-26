@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.admin.login.mapper.LoginMapper">
+
+	<!-- 사용자 정보 조회 -->
+	<select id="selectUserInfo" parameterType="TnUserTbVO" resultType="TnUserTbExVO">
+		SELECT
+			T1.*
+			, T2.AUTHOR_CODE
+		FROM
+			TN_USER_TB T1
+			INNER JOIN TS_AUTHOR_USER_TB T2
+				ON  T1.HM_SITE_CODE = T2.HM_SITE_CODE
+			  AND T1.LOGIN_ID = T2.LOGIN_ID
+		WHERE
+					  T1.HM_SITE_CODE = #{hmSiteCode}
+			AND T1.USE_AT = '1'
+			AND T1.LOGIN_ID = #{loginId}
+	</select>
+
+	<!-- 접속 이력 정보 변경(비밀번호 실패 횟수, 최근 접속 일시) -->
+	<update id="updateConectInfo" parameterType="TnUserTbVO"> TN_ATCH_FILE
+		UPDATE
+						TN_USER_TB
+				SET
+						  PW_FAILR_CNT = 0
+						, RECENT_CONECT_DT = TO_CHAR(SYSDATE, 'YYYYMMDDHH24MISS')
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+			 AND LOGIN_ID = #{loginId}
+	</update>
+
+	<!-- 비밀번호 실패 횟수 증가 -->
+	<update id="updatePwFailrCnt" parameterType="TnUserTbVO">
+		UPDATE
+						TN_USER_TB
+				SET
+						PW_FAILR_CNT = PW_FAILR_CNT + 1
+		 WHERE
+		 				HM_SITE_CODE = #{hmSiteCode}
+			   AND LOGIN_ID = #{loginId}
+	</update>
+
+</mapper>

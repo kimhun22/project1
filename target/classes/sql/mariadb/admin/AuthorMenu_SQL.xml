@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.system.authorMenu.mapper.AuthorMenuMapper">
+
+	<!-- 메뉴 권한 목록 조회 -->
+	<select id="selectAuthorMenuMappingList" parameterType="TsAuthorMenuTbVO" resultType="TsAuthorMenuTbVO">
+		SELECT
+						*
+		FROM
+						TS_AUTHOR_MENU_TB
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+			 AND AUTHOR_CODE = #{authorCode}
+	</select>
+
+	<!-- 메뉴 권한 등록 -->
+	<insert id="insertAuthorMenuMapping" parameterType="TsAuthorMenuTbVO">
+		INSERT INTO TS_AUTHOR_MENU_TB (
+		      HM_SITE_CODE
+			, AUTHOR_CODE
+			, MENU_CODE
+			, REGIST_USER_ID
+			, UPDATE_USER_ID
+			, REGIST_DT
+			, UPDATE_DT
+        ) VALUES (
+        	  #{hmSiteCode}
+			, #{authorCode}
+			, #{menuCode}
+			, #{registUserId}
+			, #{updateUserId}
+			, NOW()
+			, NOW()
+		)
+	</insert>
+
+    <!--  메뉴 권한별 일괄 삭제   -->
+    <update id="deleteAuthorMenuMapping" parameterType="TsAuthorMenuTbVO">
+		DELETE
+		  FROM
+						TS_AUTHOR_MENU_TB
+		WHERE
+					  HM_SITE_CODE = #{hmSiteCode}
+			 AND AUTHOR_CODE = #{authorCode}
+    </update>
+
+</mapper>

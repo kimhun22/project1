@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.common.file.mapper.CommFileMapper">
+
+	<!-- 파일 목록 조회 -->
+	<select id="selectFileList" parameterType="TnAtchFileTbVO" resultType="TnAtchFileTbVO">
+		SELECT
+						  HM_SITE_CODE
+						, FILE_NO
+						, FILE_SN
+						, FILE_NM
+						, FILE_PATH
+						, ORGINL_FILE_NM
+						, FILE_EXTSN
+						, FILE_SIZE
+		  FROM
+						TN_ATCH_FILE_TB
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+			 AND DELETE_AT = '0'
+			 AND FILE_NO = #{fileNo}
+		ORDER BY FILE_SN
+	</select>
+
+	<!-- 파일 상세 조회 -->
+	<select id="selectFile" parameterType="TnAtchFileTbVO" resultType="TnAtchFileTbVO">
+		SELECT
+					  HM_SITE_CODE
+					, FILE_NO
+					, FILE_SN
+					, FILE_NM
+					, FILE_PATH
+					, ORGINL_FILE_NM
+					, FILE_EXTSN
+					, FILE_SIZE
+		FROM
+			TN_ATCH_FILE_TB
+		WHERE
+					  HM_SITE_CODE = #{hmSiteCode}
+			AND FILE_NO = #{fileNo}
+			AND FILE_SN = #{fileSn}
+	</select>
+
+	<!-- 파일 등록자 회원 정보 조회 -->
+	<select id="selectFileRegUserInfo" parameterType="TnAtchFileTbVO" resultType="TnUserTbVO">
+		SELECT
+					T2.*
+		FROM
+				TN_ATCH_FILE_TB T1
+				INNER JOIN TN_USER_TB T2
+					ON T1.HM_SITE_CODE = T2.HM_SITE_CODE
+				 AND T1.REGIST_USER_ID = T2.LOGIN_ID
+		WHERE
+					   T1.HM_SITE_CODE = #{hmSiteCode}
+			 AND T1.FILE_NO = #{fileNo}
+			 AND T1.FILE_SN = #{fileSn}
+	</select>
+
+	<!-- 등록된 파일 갯수 조회 -->
+	<select id="selectFileCnt" parameterType="Integer" resultType="Integer">
+		SELECT
+						COUNT(*)
+		FROM
+						TN_ATCH_FILE_TB
+		WHERE
+					  HM_SITE_CODE = #{hmSiteCode}
+			AND DELETE_AT = '0'
+			AND FILE_NO = #{fileNo}
+	</select>
+
+	<!-- 파일 정보 등록(FILE_NO 생성) -->
+	<insert id="insertFileSelectKeyFileNo" parameterType="TnAtchFileTbVO">
+    	<selectKey keyProperty="fileNo" resultType="int" order="BEFORE">
+    		SELECT IFNULL(MAX(FILE_NO), 0 )+1 FILE_NO FROM TN_ATCH_FILE_TB
+        </selectKey>
+
+		INSERT INTO TN_ATCH_FILE_TB (
+			  HM_SITE_CODE
+			, FILE_NO
+			, FILE_SN
+			, FILE_NM
+			, FILE_PATH
+			, ORGINL_FILE_NM
+			, FILE_EXTSN
+			, FILE_SIZE
+			, DELETE_AT
+			, REGIST_USER_ID
+			, UPDATE_USER_ID
+			, REGIST_DT
+			, UPDATE_DT
+		) VALUES (
+			  #{hmSiteCode}
+			, #{fileNo}
+			, 1
+			, #{fileNm}
+			, #{filePath}
+			, #{orginlFileNm}
+			, #{fileExtsn}
+			, #{fileSize}
+			, '0'
+			, #{registUserId}
+			, #{updateUserId}
+			, NOW()
+			, NOW()
+		)
+    </insert>
+
+    <!-- 파일 정보 등록(FILE_SN 생성) -->
+	<insert id="insertFileSelectKeyFileSn" parameterType="TnAtchFileTbVO">
+    	<selectKey keyProperty="fileSn" resultType="int" order="BEFORE">
+			select ifnull(max(FILE_SN), 0 )+1 FILE_SN from TN_ATCH_FILE_TB  WHERE HM_SITE_CODE = #{hmSiteCode} AND FILE_NO = #{fileNo}
+        </selectKey>
+
+        INSERT INTO TN_ATCH_FILE_TB (
+        	  HM_SITE_CODE
+			, FILE_NO
+			, FILE_SN
+			, FILE_NM
+			, FILE_PATH
+			, ORGINL_FILE_NM
+			, FILE_EXTSN
+			, FILE_SIZE
+			, DELETE_AT
+			, REGIST_USER_ID
+			, UPDATE_USER_ID
+			, REGIST_DT
+			, UPDATE_DT
+        ) VALUES (
+              #{hmSiteCode}
+			, #{fileNo}
+			, #{fileSn}
+			, #{fileNm}
+			, #{filePath}
+			, #{orginlFileNm}
+			, #{fileExtsn}
+			, #{fileSize}
+			, '0'
+			, #{registUserId}
+			, #{updateUserId}
+			, NOW()
+			, NOW()
+        )
+    </insert>
+
+    <!-- 파일 정보 복사 등록 -->
+	<insert id="insertCopyFile" parameterType="TnAtchFileTbExVO">
+		<selectKey keyProperty="fileNo" resultType="int" order="BEFORE">
+    		select ifnull(max(FILE_NO), 0 )+1 FILE_NO from TN_ATCH_FILE_TB
+        </selectKey>
+
+        INSERT INTO TN_ATCH_FILE_TB (
+              HM_SITE_CODE
+			, FILE_NO
+			, FILE_SN
+			, FILE_NM
+			, FILE_PATH
+			, ORGINL_FILE_NM
+			, FILE_EXTSN
+			, FILE_SIZE
+			, DELETE_AT
+			, REGIST_USER_ID
+			, UPDATE_USER_ID
+			, REGIST_DT
+			, UPDATE_DT
+        )
+        SELECT
+		        	  #{hmSiteCode}
+					, #{fileNo}
+					, FILE_SN
+					, FILE_NM
+					, FILE_PATH
+					, ORGINL_FILE_NM
+					, FILE_EXTSN
+					, FILE_SIZE
+					, DELETE_AT
+					, #{registUserId}
+					, #{updateUserId}
+					, NOW()
+					, NOW()
+		FROM
+					TN_ATCH_FILE_TB
+		WHERE
+					 HM_SITE_CODE = #{hmSiteCode}
+			AND FILE_NO = #{copyFileNo}
+			AND DELETE_AT = '0'
+	</insert>
+
+    <!-- 파일 삭제 -->
+    <update id="deleteFile" parameterType="TnAtchFileTbVO">
+   	    UPDATE
+			TN_ATCH_FILE_TB
+		SET
+			DELETE_AT = '1'
+			, UPDATE_DT = NOW()
+			, UPDATE_USER_ID = #{updateUserId}
+		WHERE
+						HM_SITE_CODE = #{hmSiteCode}
+			 AND FILE_NO = #{fileNo}
+			<if test = 'fileSn != "" and fileSn != null'>
+				AND FILE_SN = #{fileSn}
+			</if>
+    </update>
+
+
+</mapper>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.common.sysUseHist.mapper.CommSysUseHistMapper">
+
+	<!-- 시스템 이용 이력 추가 -->
+	<insert id="insertSysUseHist" parameterType="ThSysUseHistTbVO">
+		INSERT INTO TH_SYS_USE_HIST_TB (
+		      HM_SITE_CODE
+		 	,  LOGIN_REQUST_AT
+			, REQUST_DT
+			, REQUST_URL
+			, REQUST_IP
+			, RQESTER
+		) VALUES (
+			  #{hmSiteCode}
+			, #{loginRequstAt}
+			, NOW()
+			, #{requstUrl}
+			, #{requstIp}
+			, #{rqester}
+		)
+	</insert>
+
+	<!-- 로그인 이력 요청자 정보 수정 -->
+	<update id="updateSysUseHist" parameterType="ThSysUseHistTbVO">
+		UPDATE
+						TH_SYS_USE_HIST_TB
+				SET
+						RQESTER = #{rqester}
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+			 AND REQUST_SN = #{requstSn}
+	</update>
+
+</mapper>

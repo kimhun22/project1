@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %5p [%c] %m%n" />
+        </Console>
+    </Appenders>
+
+    <Loggers>
+    	<Logger name="org.apache.commons.digester.Digester" level="INFO" additivity="false">
+        	<appender-ref ref="console"/>
+    	</Logger>
+    	<Logger name="org.apache.catalina" level="INFO" additivity="false">
+        	<appender-ref ref="console"/>
+    	</Logger>
+    	<Logger name="org.apache.jasper" level="INFO" additivity="false">
+        	<appender-ref ref="console"/>
+    	</Logger>
+
+        <Logger name="egovframework" level="DEBUG" additivity="false">
+            <AppenderRef ref="console" />
+        </Logger>
+
+		<!-- log SQL with timing information, post execution -->
+		<Logger name="log4jdbc" level="ERROR" additivity="false">
+	        <appender-ref ref="console" />
+	    </Logger>
+	    <Logger name="jdbc" level="ERROR" additivity="false">
+	        <appender-ref ref="console" />
+	    </Logger>
+	    <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
+	        <appender-ref ref="console" />
+	    </Logger>
+	    <Logger name="jdbc.sqlonly" level="INFO" additivity="false">
+	    	<AppenderRef ref="console" />
+	    </Logger>
+
+	    <Logger name="org.springframework" level="OFF" additivity="false">
+	        <appender-ref ref="console" />
+	    </Logger>
+
+        <Root level="DEBUG">
+            <AppenderRef ref="console" />
+        </Root>
+
+        <Logger name="UploadLogger" level="DEBUG" additivity="false">
+        	<AppenderRef ref="console" />
+        	<AppenderRef ref="UploadLog" />
+        </Logger>
+    </Loggers>
+</Configuration>

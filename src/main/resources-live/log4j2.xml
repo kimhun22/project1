@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d %5p [%c] %m%n" />
+        </Console>
+
+        <!-- Rolling File Appender -->
+	    <RollingFile name="file" fileName="C:/project/projectName/projectName_log/projectName.log"
+                                 filePattern="C:/project/projectName/projectName_log/$${date:yyyy}/$${date:MM}/projectName_%d{yyyyMMdd}.log">
+			<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} | %-5.5p | %-30.30C::%-30.30M:%-5.5L | %msg%n" />
+			<Policies>
+				<SizeBasedTriggeringPolicy size="10MB" /> <!-- 10MB 용량이 초과시 DefaultRolloverStrategy 정책만큼 넘버링 -->
+				<TimeBasedTriggeringPolicy module="true" interval="1" /><!-- 일별 로그 파일 생성-->
+			</Policies>
+			<DefaultRolloverStrategy max="500" fileIndex="min" /><!-- 롤링 파일 500개 까지 생성 -->
+	    </RollingFile>
+    </Appenders>
+    <Loggers>
+    	<Logger name="org.apache.commons.digester.Digester" level="INFO" additivity="false">
+        	<appender-ref ref="console"/>
+        	<appender-ref ref="file"/>
+    	</Logger>
+    	<Logger name="org.apache.catalina" level="INFO" additivity="false">
+        	<appender-ref ref="console"/>
+        	<appender-ref ref="file"/>
+    	</Logger>
+    	<Logger name="org.apache.jasper" level="INFO" additivity="false">
+        	<appender-ref ref="console"/>
+        	<appender-ref ref="file"/>
+    	</Logger>
+
+        <Logger name="egovframework" level="DEBUG" additivity="false">
+            <appender-ref ref="console" />
+            <appender-ref ref="file"/>
+        </Logger>
+
+		<!-- log SQL with timing information, post execution -->
+		<Logger name="log4jdbc" level="ERROR" additivity="false">
+	       <appender-ref ref="console" />
+	        <appender-ref ref="file"/>
+	    </Logger>
+	    <Logger name="jdbc" level="ERROR" additivity="false">
+	        <appender-ref ref="console" />
+	        <appender-ref ref="file"/>
+	    </Logger>
+	    <Logger name="jdbc.sqltiming" level="INFO" additivity="false">
+	       <appender-ref ref="console" />
+	        <appender-ref ref="file"/>
+	    </Logger>
+	    <Logger name="jdbc.sqlonly" level="INFO" additivity="false">
+	    	<appender-ref ref="console" />
+	        <appender-ref ref="file"/>
+	    </Logger>
+
+	    <Logger name="org.springframework" level="INFO" additivity="false">
+	        <appender-ref ref="console" />
+	        <appender-ref ref="file"/>
+	    </Logger>
+
+        <Root level="DEBUG">
+            <appender-ref ref="console" />
+            <appender-ref ref="file"/>
+        </Root>
+
+        <Logger name="UploadLogger" level="INFO" additivity="false">
+        	<appender-ref ref="console" />
+        	<appender-ref ref="UploadLog" />
+        </Logger>
+    </Loggers>
+</Configuration>

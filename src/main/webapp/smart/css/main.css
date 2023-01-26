@@ -1,0 +1,39 @@
+@charset 'utf-8';
+
+
+/* main -layout */
+.m_left, m_right {display:table-cell; vertical-align:top;}
+.m_left {width:253px;}
+.m_right {padding-left:20px;}
+
+
+/* member - login */
+.m_login{background-color:#fff; border:1px solid #bcbec0; border-radius:15px; position:relative; margin-bottom:15px;}
+.m_login, .m_login h4 {border-top-left-radius: 15px; border-top-right-radius: 15px;}
+.m_login h4 {background-color:#434758; margin:-1px; font-size:14px; color:#fff; font-family:Dotum,'돋음'; font-weight:600; padding:9px 18px;}
+
+.m_login i {position:absolute; left:15px; top:50px; border:1px solid #b7b6b7;}
+.m_login i img {vertical-align:middle; width:52px; height:72px;}
+
+.m_login dl {margin-left:70px; padding:15px 10px; }
+.m_login dt {position:relative; padding-bottom:5px; padding-left:18px;}
+.m_login dt:after {position:absolute; content: ''; left:0; top:3px; width:13px; height:13px; bottom:auto; background: url(../images/bl_green.png) no-repeat;}
+.m_login dd {font-size:12px;}
+
+
+/* 자료실, 프로세스 개선요청 */
+.main_tab {border:1px solid #bcbec0; border-radius:15px; background-color:#fff; padding:25px;}
+.main_tab dt { float:left; }
+.main_tab dd { float:right;}
+.main_tab dl:after {display: block; clear: both; content: " ";}
+
+
+.lay_step2 h4 {border-bottom:1px solid #000; padding-bottom:8px; font-size:14px; font-family:Dotum,'돋음'; color:#000000; font-weight:bold; position:relative;}
+.lay_step2 h4 .btn_more {bottom:8px;}
+.lay_step2{width:900px;}
+.lay_step2 .left, .lay_step2 .right {display:inline-block; width:47%;}
+.lay_step2 .left{ float:left; }
+.lay_step2 .right  {margin-left:38px;  float:left; }
+
+.lay_step2 li {padding:4px 0 2px 0; border-bottom:1px solid #ededed; padding-right:69px; position:relative;}
+.lay_step2 li i {color:#939598; position:absolute; font-size:11px; display:block; right:0; top:7px;}

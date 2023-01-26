@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.board.sysErbbs.mapper.SysErbbsMapper">
+
+    <sql id="WHERE_selectSysErbbsList">
+        <if test="userId != null and userId != ''">
+            AND BBS.REGIST_USER_ID = #{userId}
+        </if>
+        <if test="searchNttSeCode != null and searchNttSeCode != ''">
+            AND BBS.NTT_SE_CODE = #{searchNttSeCode}
+        </if>
+        <if test="searchRegistStartDe != null and searchRegistStartDe != ''">
+            AND DATE_FORMAT(BBS.REGIST_DT, '%Y-%m-%d') <![CDATA[>=]]> #{searchRegistStartDe}
+        </if>
+        <if test="searchRegistEndDe != null and searchRegistEndDe != ''">
+           AND DATE_FORMAT(BBS.REGIST_DT, '%Y-%m-%d') <![CDATA[<=]]> #{searchRegistEndDe}
+        </if>
+        <if test="searchStartNttDe != null and searchStartNttDe != ''">
+           AND DATE_FORMAT(BBS.ANSWER_DT, '%Y-%m-%d') <![CDATA[>=]]>#{searchStartAnswerDt}
+        </if>
+        <if test="searchEndNttDe != null and searchEndNttDe != ''">
+            AND DATE_FORMAT(BBS.ANSWER_DT, '%Y-%m-%d') <![CDATA[<=]]> #{searchEndAnswerDt}
+        </if>
+        <if test="nttSj != null and nttSj != ''">
+            AND UPPER(NTT_SJ) LIKE CONCAT('%' , #{nttSj} , '%')
+        </if>
+        <if test="kwrd7 != null and kwrd7 != ''">
+        AND KWRD_7 = #{kwrd7}
+        </if>
+    </sql>
+
+    <!-- 시스템 오류 신고 게시판 목록 갯수 조회 -->
+    <select id="selectSysErbbsListCnt" parameterType="TnBbsTbExVO" resultType="int">
+        SELECT
+            			COUNT(*)
+          FROM
+            			TN_BBS_TB BBS
+        WHERE
+        				BBS.HM_SITE_CODE = #{hmSiteCode}
+             AND  BBS.BBS_KND_CODE = '06'
+            <include refid="WHERE_selectSysErbbsList" />
+    </select>
+
+    <!-- 시스템 오류 신고 게시판 목록 조회 -->
+    <select id="selectSysErbbsList" parameterType="TnBbsTbExVO" resultType="TnBbsTbExVO">
+        SELECT
+            A.*
+        FROM (
+            SELECT
+                ROW_NUMBER() OVER (ORDER BY BBS.NTT_NO DESC) AS ROW_NUM
+                , ( select CMMN_CODE_NM from  TS_CMMN_CODE_TB where PARNTS_CMMN_CODE = 'RPT001' AND CMMN_CODE =BBS.NTT_SE_CODE) NTT_SE_CODE_NM
+                , REG_USER.DEPT_NM
+                , REG_USER.USER_NM
+                , BBS.*
+                 , (select USER_NM from  TN_USER_TB WHERE LOGIN_ID = ANSWER_USER_ID  )  ANSWER_USER_NM
+            FROM
+                TN_BBS_TB BBS
+                INNER JOIN TN_USER_TB REG_USER
+                    ON BBS.HM_SITE_CODE = REG_USER.HM_SITE_CODE
+                   AND BBS.REGIST_USER_ID = REG_USER.LOGIN_ID
+           WHERE
+            				BBS.HM_SITE_CODE = #{hmSiteCode}
+                 AND BBS.BBS_KND_CODE = '06'
+                <include refid="WHERE_selectSysErbbsList" />
+        ) A
+        WHERE
+            A.ROW_NUM BETWEEN #{firstIndex} AND #{lastIndex}
+    </select>
+
+    <!-- 시스템 오류 신고 게시판 단일 조회 -->
+    <select id="selectSysErbbs" parameterType="TnBbsTbExVO" resultType="TnBbsTbExVO">
+        SELECT
+             ( SELECT CMMN_CODE_NM FROM  TS_CMMN_CODE_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND  PARNTS_CMMN_CODE = 'RPT001' AND CMMN_CODE =BBS.NTT_SE_CODE) NTT_SE_CODE_NM
+             , BBS.*
+             , REG_USER.DEPT_NM
+             , REG_USER.USER_NM
+             , (select USER_NM from  TN_USER_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND LOGIN_ID = ANSWER_USER_ID  )  ANSWER_USER_NM
+        FROM
+            TN_BBS_TB BBS
+            INNER JOIN TN_USER_TB REG_USER
+                  ON BBS.HM_SITE_CODE = REG_USER.HM_SITE_CODE
+               AND BBS.REGIST_USER_ID = REG_USER.LOGIN_ID
+        WHERE
+        	  		   BBS.HM_SITE_CODE = #{hmSiteCode}
+             AND BBS.BBS_KND_CODE = '06'
+             AND BBS.NTT_NO = #{nttNo}
+    </select>
+
+    <!-- 시스템 오류 신고 게시판 등록 -->
+    <insert id="insertSysErbbs" parameterType="TnBbsTbExVO">
+        <selectKey keyProperty="nttNo" resultType="Integer" order="BEFORE">
+            SELECT IFNULL(MAX(NTT_NO), 0 )+1 NTT_NO FROM TN_BBS_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND BBS_KND_CODE = '06'
+        </selectKey>
+        INSERT INTO TN_BBS_TB (
+             HM_SITE_CODE
+            , BBS_KND_CODE
+            , NTT_NO
+            , NTT_SJ
+            , NTT_SE_CODE
+            , NTT_CN_1
+            <if test="nttCn2 != null and nttCn2 != ''">
+            , NTT_CN_2
+            </if>
+            , KWRD_1
+            , KWRD_2
+            , KWRD_3
+            , KWRD_4
+            , KWRD_5
+            , KWRD_6
+            , KWRD_7
+            , KWRD_8
+            , KWRD_9
+            , KWRD_10
+            , ATCH_FILE_NO
+            , REGIST_USER_ID
+            , UPDATE_USER_ID
+            , REGIST_DT
+            , UPDATE_DT
+        ) VALUES (
+        	  #{hmSiteCode}
+            , '06'
+            , #{nttNo}
+            , #{nttSj}
+            , #{nttSeCode}
+            , #{nttCn1}
+            <if test="nttCn2 != null and nttCn2 != ''">
+            , #{nttCn2}
+            </if>
+            , #{kwrd1}
+            , #{kwrd2}
+            , #{kwrd3}
+            , #{kwrd4}
+            , #{kwrd5}
+            , #{kwrd6}
+            <if test="kwrd7 != null and kwrd7 != ''">
+            , #{kwrd7}
+            </if>
+            <if test="kwrd7 == null or kwrd7 == ''">
+            , 'N'
+            </if>
+            , #{kwrd8}
+            , #{kwrd9}
+            , #{kwrd10}
+            , #{atchFileNo}
+            , #{registUserId}
+            , #{updateUserId}
+            , NOW()
+            , NOW()
+        )
+    </insert>
+
+    <!-- 시스템 오류 신고 게시판 수정 -->
+    <update id="updateSysErbbs" parameterType="TnBbsTbExVO">
+        UPDATE
+           				 TN_BBS_TB
+       			 SET
+				            NTT_SJ = #{nttSj}
+				            , NTT_SE_CODE = #{nttSeCode}
+				            , NTT_CN_1 = #{nttCn1}
+				            <if test="nttCn2 != null and nttCn2 != ''">
+				            , NTT_CN_2 = #{nttCn2}
+				            </if>
+				            , KWRD_1 = #{kwrd1}
+				            , KWRD_2 = #{kwrd2}
+				            , KWRD_3 = #{kwrd3}
+				            , KWRD_4 = #{kwrd4}
+				            , KWRD_5 = #{kwrd5}
+				            , KWRD_6 = #{kwrd6}
+				            <if test="kwrd7 != null and kwrd7 != ''">
+				            , KWRD_7 = #{kwrd7}
+				            </if>
+				            , KWRD_8 = #{kwrd8}
+				            , KWRD_9 = #{kwrd9}
+				            , KWRD_10 = #{kwrd10}
+				            , ATCH_FILE_NO = #{atchFileNo}
+				            <if test="nttCn2 != null and nttCn2 != ''">
+				            , ANSWER_DT = NOW()
+				            </if>
+				            <if test="answerUserId != null and answerUserId != ''">
+				            , ANSWER_USER_ID = #{answerUserId}
+				            </if>
+				            , UPDATE_USER_ID = #{updateUserId}
+				            , UPDATE_DT = NOW()
+        		WHERE
+        					   HM_SITE_CODE = #{hmSiteCode}
+            		 AND BBS_KND_CODE = '06'
+            		 AND NTT_NO = #{nttNo}
+    </update>
+
+    <!-- 시스템 오류 신고 게시판 삭제 -->
+    <delete id="deleteSysErbbs" parameterType="TnBbsTbExVO">
+        DELETE
+          FROM
+            			TN_BBS_TB
+        WHERE
+        			  HM_SITE_CODE = #{hmSiteCode}
+            AND BBS_KND_CODE = '06'
+            AND NTT_NO = #{nttNo}
+    </delete>
+
+</mapper>

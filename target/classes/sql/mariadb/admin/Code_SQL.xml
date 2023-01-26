@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.system.code.mapper.CodeMapper">
+
+	<!-- 목록 조회 -->
+	<select id="selectCodeList" parameterType="TsCmmnCodeTbExVO" resultType="TsCmmnCodeTbExVO">
+			SELECT
+						   HM_SITE_CODE
+			    		  ,PARNTS_CMMN_CODE
+						  ,CMMN_CODE
+						  ,CMMN_CODE_NM
+						  ,UPPER_PARNTS_CMMN_CODE
+						  ,UPPER_CMMN_CODE
+						  ,SORT_ORDR
+						  ,STEP_CODE
+						  ,RM
+						  ,USE_AT
+						  ,DELETE_AT
+						  ,REGIST_USER_ID
+						  ,UPDATE_USER_ID
+						  ,REGIST_DT
+						  ,UPDATE_DT
+			   FROM
+			      			TS_CMMN_CODE_TB
+			 WHERE
+			 				HM_SITE_CODE = #{hmSiteCode}
+			 	   AND DELETE_AT = '0'
+			 ORDER BY STEP_CODE
+	</select>
+
+	<!-- 상세 조회 -->
+	<select id="selectCode" parameterType="TsCmmnCodeTbExVO" resultType="TsCmmnCodeTbExVO">
+		SELECT
+				PARNTS_CMMN_CODE
+				, (SELECT CMMN_CODE_NM FROM TS_CMMN_CODE_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND  CMMN_CODE = T1.PARNTS_CMMN_CODE) AS PARNTS_CMMN_CODE_NM
+				, (SELECT USE_AT FROM TS_CMMN_CODE_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND CMMN_CODE = T1.PARNTS_CMMN_CODE) AS UPPER_USE_AT
+				, CMMN_CODE
+				, CMMN_CODE_NM
+				, UPPER_PARNTS_CMMN_CODE
+				, UPPER_CMMN_CODE
+				, SORT_ORDR
+				, RM
+				, (SELECT COUNT(*) FROM TS_CMMN_CODE_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND PARNTS_CMMN_CODE = T1.CMMN_CODE AND DELETE_AT = '0') AS CHILD_CNT
+				, (SELECT SORT_ORDR FROM TS_CMMN_CODE_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND PARNTS_CMMN_CODE = #{searchKeyword} AND CMMN_CODE =  #{searchKeyword2}) AS PARNTS_SORT_ORDR
+				, USE_AT
+				, DELETE_AT
+				, REGIST_USER_ID
+				, UPDATE_USER_ID
+				, REGIST_DT
+				, UPDATE_DT
+		FROM
+					TS_CMMN_CODE_TB T1
+		WHERE
+					  T1.HM_SITE_CODE = #{hmSiteCode}
+			AND T1.PARNTS_CMMN_CODE = #{parntsCmmnCode}
+			AND T1.CMMN_CODE = #{cmmnCode}
+	</select>
+
+	<!-- 하위 코드 목록 조회 -->
+	<select id="selectSubCodeList" parameterType="TsCmmnCodeTbExVO" resultType="TsCmmnCodeTbExVO">
+		SELECT
+						*
+		FROM
+						TS_CMMN_CODE_TB
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+			 AND DELETE_AT = '0'
+			 AND UPPER_PARNTS_CMMN_CODE = #{parntsCmmnCode}
+			 AND PARNTS_CMMN_CODE = #{cmmnCode}
+    </select>
+
+	<!-- 다음 코드 순서 조회 -->
+	<select id="selectNextCodeOrd" parameterType="TsCmmnCodeTbExVO" resultType="Integer">
+		SELECT
+					   IFNULL(MAX(SORT_ORDR), 0 )+1 SORT_ORDR
+		  FROM
+		  			   TS_CMMN_CODE_TB
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+			 AND DELETE_AT = '0'
+			 AND PARNTS_CMMN_CODE = #{cmmnCode}
+	</select>
+
+	<!-- 코드 중복 체크 -->
+	<select id="selectOverlapCodeCheck" parameterType="TsCmmnCodeTbExVO" resultType="Integer">
+		SELECT
+						COUNT(*)
+		  FROM
+						TS_CMMN_CODE_TB
+		WHERE
+						HM_SITE_CODE = #{hmSiteCode}
+		      AND PARNTS_CMMN_CODE = #{parntsCmmnCode}
+		      AND CMMN_CODE = #{cmmnCode}
+	</select>
+
+	<select id="selectStepCode" parameterType="TsCmmnCodeTbExVO" resultType="String">
+		SELECT
+					<if test = 'levelStep == "1"'>
+						LPAD(#{sortOrdr}, 3,0) AS  STEP_CODE
+					</if>
+					<if test = 'levelStep == "2"'>
+						CONCAT(LPAD(#{parntsSortOrdr},3,0), LPAD(#{sortOrdr},3,0))
+					</if>
+	</select>
+
+
+	<!-- 등록 -->
+	<insert id="insertCode" parameterType="TsCmmnCodeTbExVO">
+		INSERT INTO TS_CMMN_CODE_TB (
+					  HM_SITE_CODE
+					, PARNTS_CMMN_CODE
+					, CMMN_CODE
+					, CMMN_CODE_NM
+					, UPPER_PARNTS_CMMN_CODE
+					, UPPER_CMMN_CODE
+					, SORT_ORDR
+					, STEP_CODE
+					, RM
+					, USE_AT
+					, DELETE_AT
+					, REGIST_USER_ID
+					, UPDATE_USER_ID
+					, REGIST_DT
+					, UPDATE_DT
+		) VALUES (
+					  #{hmSiteCode}
+					, #{parntsCmmnCode}
+					, #{cmmnCode}
+					, #{cmmnCodeNm}
+					, #{upperParntsCmmnCode}
+					, #{upperCmmnCode}
+					, #{sortOrdr}
+					, #{stepCode}
+					, #{rm}
+					, #{useAt}
+					, '0'
+					, #{registUserId}
+					, #{updateUserId}
+					, NOW()
+					, NOW()
+        )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="updateCode" parameterType="TsCmmnCodeTbExVO">
+		UPDATE
+						TS_CMMN_CODE_TB
+				 SET
+						CMMN_CODE_NM = #{cmmnCodeNm}
+						, SORT_ORDR = #{sortOrdr}
+						, STEP_CODE = #{stepCode}
+						, RM = #{rm}
+						, USE_AT = #{useAt}
+						, UPDATE_DT = NOW()
+						, UPDATE_USER_ID = #{updateUserId}
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+			 AND PARNTS_CMMN_CODE = #{parntsCmmnCode}
+			 AND CMMN_CODE = #{cmmnCode}
+	</update>
+
+    <!--  삭제   -->
+    <update id="deleteCode" parameterType="TsCmmnCodeTbExVO">
+		UPDATE
+			TS_CMMN_CODE_TB
+		SET
+			DELETE_AT = '1'
+			, UPDATE_DT = NOW()
+			, UPDATE_USER_ID = #{updateUserId}
+		WHERE
+					  HM_SITE_CODE = #{hmSiteCode}
+			AND PARNTS_CMMN_CODE = #{parntsCmmnCode}
+			AND CMMN_CODE = #{cmmnCode}
+    </update>
+
+</mapper>

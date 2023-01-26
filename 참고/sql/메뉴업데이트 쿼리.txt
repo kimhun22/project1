@@ -1,0 +1,18 @@
+
+-- 사이트코드 변경 조회 쿼리
+SELECT concat('/gangjin', menu_url), menu_url, REPLACE(menu_url, '/gangjin','/imsil') FROM ts_menu_tb
+  WHERE
+ 			   HM_SITE_CODE = 'gangjin'
+ 	 AND MENU_URL != ''
+;
+
+UPDATE ts_menu_tb
+      SET menu_url = REPLACE(menu_url, '/gangjin','/imsil')
+ WHERE MENU_URL != ''
+;
+
+
+--게시판 중요게시물 게시일 추가
+ALTER TABLE TN_BBS_TB ADD IMPORT_YN char(1);
+ALTER TABLE TN_BBS_TB ADD SHOW_START_DT VARCHAR(8);
+ALTER TABLE TN_BBS_TB ADD SHOW_END_DT VARCHAR(8);

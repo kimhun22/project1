@@ -1,0 +1,111 @@
+@charset "utf-8";
+/* CSS Document */
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br{
+	border-bottom-right-radius: 0;
+}
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl{
+	border-bottom-left-radius: 0;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr{
+	border-top-right-radius: 0;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl{
+	border-top-left-radius: 0;
+}
+.ui-datepicker{
+	font-size: 12px;
+	border: 1px solid #aaaaaa;
+	width: 260px;
+}
+.ui-datepicker-header {
+	background: url("/js/lib/ui/1.11.1/image/ui-bg_highlight-soft_75_cccccc_1x100.png") repeat-x scroll 50% 50% #cccccc;
+    border: 1px solid #aaaaaa;
+    color: #222222;
+    font-weight: bold;
+    font-size: 12px;
+    height: auto;
+    line-height: normal;
+}
+.ui-datepicker .ui-datepicker-title select {
+    font-size: 12px;
+    margin: 1px 0;
+    height: 25px;
+}
+.ui-datepicker-trigger{
+    background: url("/image/login_logo.png") no-repeat scroll left top;
+    color: transparent;
+    cursor: pointer;
+    font-size: 0;
+    height: 26px;
+    margin: 0 2px 0 -6px;
+    padding-top: 7px;
+    width: 26px;
+}
+
+.ui-dialog .ui-datepicker-trigger{
+	padding-top: 0;
+	height: 27px;
+}
+
+.ui-widget {
+    font-size : 1.0em;
+	font-family:'Pretendard', sans-serif;
+	padding:0;
+}
+
+.ui-datepicker table {
+	font-size: 15px;
+}
+
+.blockOverlay {
+	background-image: url('/image/common/loading.gif');
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 100px;
+}
+
+.monthpicker table.ui-datepicker-calendar { display:none; }
+.yearpicker table.ui-datepicker-calendar,
+.yearpicker .ui-datepicker-prev,
+.yearpicker .ui-datepicker-next,
+.yearpicker .ui-datepicker-month { display:none; }
+input.datepicker {vertical-align:top; display:inline-blcok; margin-right:10px;}
+
+
+.left_div {
+	float: left;
+    height: 650px;
+    border: 1px solid #d6d6d6;
+}
+.right_div {
+	float: left;
+    height: 650px;
+    border: 1px solid #d6d6d6;
+    margin-left: 20px;
+}
+.treeArea {
+	width: 100%;
+    height: 580px;
+    border: 1px solid #d6d6d6;
+}
+.div_scroll {
+	overflow-y: auto;
+}
+.div_sub_area {
+	padding: 15px 20px;
+}
+
+.fileItem {
+	overflow: hidden;
+}
+.fileItem+.fileItem {
+	margin-top: 5px;
+}
+
+/*  */
+
+.ui-widget-header { background: #DEE6EC !important; border: none !important;}
+.ui-dialog .ui-dialog-titlebar { padding: 8px 16px !important;}
+.ui-dialog .ui-dialog-title { margin: 0 !important;}
+.ui-widget button { font-family: inherit;}

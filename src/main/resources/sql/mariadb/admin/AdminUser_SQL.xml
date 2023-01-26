@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.system.userInfo.mapper.AdminUserMapper">
+
+    <sql id="userSql">
+        <where>
+            AND T1.USE_AT = '1'
+            <if test="searchKeyword != null and searchKeyword != ''">
+                <choose>
+                    <when test="searchCondition == 'userId'">
+                        AND UPPER(T1.LOGIN_ID) LIKE CONCAT('%' , #{searchKeyword} , '%')
+                    </when>
+                    <when test="searchCondition == 'userName'">
+                        AND T1.USER_NM LIKE CONCAT('%' , #{searchKeyword} , '%')
+                    </when>
+                </choose>
+            </if>
+            <if test="searchCondition == 'deptCode'">
+                <if test="deptCode != null and deptCode != ''">
+                    AND T1.DEPT_CODE LIKE CONCAT('%' , #{deptCode} , '%')
+                </if>
+            </if>
+            <if test="searchCondition == 'authorCode'">
+                <if test="authorCode != null and authorCode != ''">
+                    AND T2.AUTHOR_CODE = #{authorCode}
+                </if>
+            </if>
+
+            <if test="authorCodeNot != null and authorCodeNot != ''">
+                    AND T2.AUTHOR_CODE != #{authorCodeNot}
+            </if>
+        </where>
+    </sql>
+
+    <select id="selectAdminUserListCnt" parameterType="TnUserTbExVO" resultType="int">
+        SELECT
+        			COUNT(*) cnt
+          FROM
+            		TN_USER_TB T1
+       			 	LEFT OUTER JOIN TS_AUTHOR_USER_TB T2
+              ON T1.HM_SITE_CODE = T2.HM_SITE_CODE
+            AND T1.HM_SITE_CODE = #{hmSiteCode}
+            AND T1.LOGIN_ID = T2.LOGIN_ID
+        <include refid="userSql"/>
+    </select>
+
+    <select id="selectAdminUserList" parameterType="TnUserTbExVO" resultType="TnUserTbExVO">
+        SELECT
+            A.*
+        FROM
+            (SELECT ROW_NUMBER() OVER (ORDER BY DEPT_ALL_NM ASC, USER_NM ASC) AS RN
+                  , ROW_NUMBER() OVER (ORDER BY DEPT_ALL_NM DESC, USER_NM DESC) AS RNUM
+                  , T1.*
+                  , T2.AUTHOR_CODE
+                  , (SELECT CMMN_CODE_NM FROM TS_CMMN_CODE_TB WHERE PARNTS_CMMN_CODE = 'COM001' AND CMMN_CODE = T2.AUTHOR_CODE) AS AUTHORNM
+            FROM
+                		TN_USER_TB T1
+            LEFT OUTER JOIN TS_AUTHOR_USER_TB T2
+                  ON  T1.HM_SITE_CODE = T1.HM_SITE_CODE
+                AND T1.HM_SITE_CODE = #{hmSiteCode}
+                AND T1.LOGIN_ID = T2.LOGIN_ID
+                <include refid="userSql"/>
+            ) A
+        WHERE
+            A.rn BETWEEN #{firstIndex} AND #{lastIndex}
+    </select>
+
+    <select id="selectAdminUserDetail" parameterType="TnUserTbExVO" resultType="TnUserTbExVO">
+	    SELECT
+	    				T1.*
+	    	 		 , T2.AUTHOR_CODE
+	    FROM
+	       			 TN_USER_TB T1
+	         LEFT OUTER JOIN TS_AUTHOR_USER_TB T2
+               ON T1.HM_SITE_CODE= T1.HM_SITE_CODE
+             AND T1.LOGIN_ID = T2.LOGIN_ID
+	    WHERE
+	    			  T1.HM_SITE_CODE = #{hmSiteCode}
+	        AND T1.LOGIN_ID = #{loginId}
+	        AND T1.USE_AT = 1
+    </select>
+
+    <select id="selectOldUserRole" parameterType="TnUserTbExVO" resultType="String">
+	    SELECT AUTHOR_CODE
+	    FROM TS_AUTHOR_USER_TB
+	    WHERE HM_SITE_CODE = #{hmSiteCode}
+	         AND LOGIN_ID = #{loginId}
+    </select>
+
+    <update id="updateAdminUserProc" parameterType="TnUserTbExVO">
+        UPDATE
+            TN_USER_TB
+        SET
+            <if test="userPwd != null and userPwd != ''">
+                USER_PWD = #{userPwd, jdbcType = VARCHAR},
+            </if>
+            UPDATE_USER_ID = #{updateUserId, jdbcType = VARCHAR},
+            UPDATE_DT = NOW()
+        WHERE
+        			   HM_SITE_CODE = #{hmSiteCode}
+             AND LOGIN_ID = #{loginId}
+    </update>
+
+	<insert id="insertRoleChangeHist" parameterType="ThAuthorChangeHistTbVO">
+		<selectKey keyProperty="histNo" resultType="String" order="BEFORE">
+    		SELECT IFNULL(MAX(HIST_NO), 0 )+1 HIST_NO FROM TH_AUTHOR_CHANGE_HIST_TB
+        </selectKey>
+    	INSERT INTO TH_AUTHOR_CHANGE_HIST_TB
+    	(
+    		HM_SITE_CODE, HIST_NO, LOGIN_ID, INSERT_DT, USE_IP, ROLE_CHANGE_CN
+    	)
+    	VALUES
+    	(
+    		#{hmSiteCode}
+    		, #{histNo}
+    		, #{loginId}
+    		, NOW()
+    		, #{useIp}
+    		, #{roleChangeCn}
+    	)
+    </insert>
+
+	<delete id="deleteUserRole" parameterType="TnUserTbExVO">
+		DELETE FROM TS_AUTHOR_USER_TB
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+		     AND LOGIN_ID =  #{loginId,jdbcType=VARCHAR}
+	</delete>
+
+	<update id="updateUserRole" parameterType="TnUserTbExVO">
+		UPDATE TS_AUTHOR_USER_TB
+		SET AUTHOR_CODE = #{authorCode,jdbcType=VARCHAR}
+			, UPDATE_USER_ID = #{updateUserId,jdbcType=VARCHAR}
+			, UPDATE_DT = NOW()
+		WHERE
+						HM_SITE_CODE = #{hmSiteCode}
+		     AND  LOGIN_ID =  #{loginId,jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertUserRole" parameterType="TnUserTbExVO">
+		INSERT INTO TS_AUTHOR_USER_TB
+			(HM_SITE_CODE, AUTHOR_CODE,LOGIN_ID,REGIST_USER_ID,UPDATE_USER_ID,REGIST_DT,UPDATE_DT)
+		VALUES
+			(  #{hmSiteCode}, #{authorCode} ,#{loginId,jdbcType=VARCHAR} , #{updateUserId},  #{updateUserId}, NOW(), NOW() )
+	</insert>
+
+</mapper>

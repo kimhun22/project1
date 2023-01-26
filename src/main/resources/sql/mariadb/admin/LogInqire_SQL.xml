@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.system.logInqire.mapper.LogInqireMapper">
+
+	<!-- 시스템 관리 - 로그조회 검색 조건 searchRqester -->
+	<sql id="WHERE_selectSysUseHistTb">
+		<if test="searchLoginRequstAt != null and searchLoginRequstAt != ''">
+            AND SUHT.LOGIN_REQUST_AT = #{searchLoginRequstAt}
+        </if>
+        <if test="searchRequstUrl != null and searchRequstUrl != ''">
+            AND SUHT.REQUST_URL LIKE CONCAT('%' , #{searchRequstUrl} , '%')
+
+        </if>
+        <if test="searchRqester != null and searchRqester != ''">
+            AND SUHT.RQESTER LIKE CONCAT('%' , #{searchRqester} , '%')
+        </if>
+        <if test="searchRqesterNm != null and searchRqesterNm != ''">
+            AND REG_USER.USER_NM LIKE CONCAT('%' , #{searchRqesterNm} , '%')
+        </if>
+        <if test="searchRequstStartDt != null and searchRequstStartDt != ''">
+            AND  DATE_FORMAT(SUHT.REQUST_DT, '%Y-%m-%d') <![CDATA[>=]]> #{searchRequstStartDt}
+        </if>
+        <if test="searchRequstEndDt != null and searchRequstEndDt != ''">
+            AND  DATE_FORMAT(SUHT.REQUST_DT, '%Y-%m-%d') <![CDATA[<=]]> #{searchRequstEndDt}
+        </if>
+    </sql>
+
+	<!-- 시스템 접속이력 게시판 목록 갯수 조회 -->
+    <select id="selectSystemConectListCnt" parameterType="ThSysUseHistTbExVO" resultType="Integer">
+        SELECT
+		    COUNT(*)
+		FROM
+		    TH_SYS_USE_HIST_TB SUHT
+		WHERE
+		 			   SUHT.HM_SITE_CODE = #{hmSiteCode}
+		     AND SUHT.REQUST_URL IN ('/loginAjax.do', '/ssoLogin.do')
+		     AND RQESTER IS NOT NULL
+		    <include refid="WHERE_selectSysUseHistTb" />
+    </select>
+
+    <!-- 시스템 접속이력 게시판 목록 조회 -->
+	<select id="selectSystemConectList" parameterType="ThSysUseHistTbExVO" resultType="ThSysUseHistTbExVO">
+		SELECT
+            A.*
+        FROM (
+			SELECT
+				ROW_NUMBER() OVER (ORDER BY SUHT.REQUST_DT DESC) AS ROW_NUM
+				, SUHT.REQUST_SN
+			    , SUHT.LOGIN_REQUST_AT
+			    , SUHT.REQUST_DT
+			    , SUHT.REQUST_URL
+			    , SUHT.REQUST_IP
+			    , SUHT.RQESTER
+			    , REG_USER.USER_NM
+			    , REG_USER.DEPT_NM
+			FROM
+			    TH_SYS_USE_HIST_TB SUHT
+			    INNER JOIN TN_USER_TB REG_USER
+               		ON  SUHT.HM_SITE_CODE = REG_USER.HM_SITE_CODE
+               	  AND SUHT.RQESTER = REG_USER.LOGIN_ID
+			WHERE
+						  SUHT.HM_SITE_CODE = #{hmSiteCode}
+			    AND SUHT.REQUST_URL IN ('/loginAjax.do', '/ssoLogin.do')
+			    AND RQESTER IS NOT NULL
+			    <include refid="WHERE_selectSysUseHistTb" />
+		) A
+        WHERE
+            A.ROW_NUM BETWEEN #{firstIndex} AND #{lastIndex}
+	</select>
+
+	<!-- 시스템 접속이력 게시판 단일 조회 -->
+	<select id="selectSystemConectOne" parameterType="ThSysUseHistTbExVO" resultType="ThSysUseHistTbExVO">
+		SELECT
+				  HM_SITE_CODE
+				, SUHT.REQUST_SN
+			    , SUHT.LOGIN_REQUST_AT
+			    , SUHT.REQUST_DT
+			    , SUHT.REQUST_URL
+			    , SUHT.REQUST_IP
+			    , SUHT.RQESTER
+			    , REG_USER.USER_NM
+			    , REG_USER.DEPT_NM
+		FROM
+		    		TH_SYS_USE_HIST_TB SUHT
+		INNER JOIN TN_USER_TB REG_USER
+              ON SUHT.RQESTER = REG_USER.LOGIN_ID
+	   WHERE SUHT.REQUST_SN = #{requstSn}
+	        AND SUHT.HM_SITE_CODE = #{hmSiteCode}
+	</select>
+
+
+	<!-- 시스템 이용이력 게시판 목록 갯수 조회 -->
+    <select id="selectSystemUseListCnt" parameterType="ThSysUseHistTbExVO" resultType="Integer">
+        SELECT
+		    				COUNT(*)
+		FROM
+		    			TH_SYS_USE_HIST_TB SUHT
+		 INNER JOIN TN_USER_TB REG_USER
+           	  ON  SUHT.HM_SITE_CODE  = REG_USER.HM_SITE_CODE
+           	AND SUHT.RQESTER = REG_USER.LOGIN_ID
+		WHERE
+					   SUHT.HM_SITE_CODE = #{hmSiteCode}
+			 AND SUHT.REQUST_URL NOT IN ( '/main.do',  '/login.do', '/ssoLogin.do', '/loginAjax.do', '/loginAjax.do', '/logout.do',  '/comm/file/download.do', '/common/codeList.do')
+	         AND SUHT.REQUST_URL NOT LIKE '/manage/%'
+	         AND SUHT.REQUST_URL NOT LIKE '/system/%'
+	        <include refid="WHERE_selectSysUseHistTb" />
+    </select>
+
+	<!-- 시스템 이용이력 게시판 목록 조회 -->
+	<select id="selectSystemUseList" parameterType="ThSysUseHistTbExVO" resultType="ThSysUseHistTbExVO">
+		SELECT A.*
+		    FROM (
+				SELECT
+					ROW_NUMBER() OVER (ORDER BY SUHT.REQUST_DT DESC) AS ROW_NUM
+					, SUHT.REQUST_SN
+				    , SUHT.LOGIN_REQUST_AT
+				    , SUHT.REQUST_DT
+				    , SUHT.REQUST_URL
+				   	,	 CASE
+				    		WHEN INSTR(SUHT.REQUST_URL, '/board') > 0 			THEN '게시판'
+				    		ELSE '운영'
+						  END AS "URL_SE"
+				    , SUHT.REQUST_IP
+				    , SUHT.RQESTER
+				    , REG_USER.USER_NM
+			    	, REG_USER.DEPT_NM
+				FROM
+							 			   TH_SYS_USE_HIST_TB SUHT
+					INNER JOIN TN_USER_TB REG_USER
+               			ON  SUHT.HM_SITE_CODE = REG_USER.HM_SITE_CODE
+               	       AND  SUHT.RQESTER = REG_USER.LOGIN_ID
+				WHERE
+							  SUHT.HM_SITE_CODE = #{hmSiteCode}
+					AND SUHT.REQUST_URL NOT IN ( '/main.do',  '/login.do', '/ssoLogin.do', '/loginAjax.do', '/loginAjax.do', '/logout.do',  '/comm/file/download.do', '/common/codeList.do')
+				    AND SUHT.REQUST_URL NOT LIKE '/manage/%'
+				    AND SUHT.REQUST_URL NOT LIKE '/system/%'
+				<include refid="WHERE_selectSysUseHistTb" />
+			) A
+			WHERE
+            A.ROW_NUM BETWEEN #{firstIndex} AND #{lastIndex}
+	</select>
+
+</mapper>

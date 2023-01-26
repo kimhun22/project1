@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+		version="2.0">
+  <tlib-version>3.0</tlib-version>
+    <short-name>hmFunction</short-name>
+    <uri>/WEB-INF/tlds/hmFunction</uri>
+
+    <function>
+    	<description>Math.ceil</description>
+    	<name>ceil</name>
+    	<function-class>core.web.jstl.Function</function-class>
+    	<function-signature>
+    		java.lang.Integer ceil(double)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>제목자르기</description>
+    	<name>cutString</name>
+    	<function-class>core.web.jstl.Function</function-class>
+    	<function-signature>
+    		java.lang.String cutString(java.lang.String, int, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>nl2br</description>
+    	<name>nl2br</name>
+    	<function-class>core.web.jstl.Function</function-class>
+    	<function-signature>
+    		java.lang.String nl2br(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>replaceAll</description>
+    	<name>replaceAll</name>
+    	<function-class>core.web.jstl.Function</function-class>
+    	<function-signature>
+    		java.lang.String replaceAll(java.lang.String, java.lang.String, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>HTML TAG 제거</description>
+    	<name>escapeHtml</name>
+    	<function-class>core.web.jstl.Function</function-class>
+    	<function-signature>
+    		java.lang.String escapeHtml(java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>org.apache.commons.io.FileUtils.byteCountToDisplaySize</description>
+    	<name>byteCountToDisplaySize</name>
+    	<function-class>org.apache.commons.io.FileUtils</function-class>
+    	<function-signature>
+    		java.lang.String byteCountToDisplaySize(long)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>yyyymmdd formatting</description>
+    	<name>strToDateFmt</name>
+    	<function-class>core.util.StringUtil</function-class>
+    	<function-signature>
+    		java.lang.String strToDateFmt(java.lang.String, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>yyyymm formatting</description>
+    	<name>strToYearMonthFmt</name>
+    	<function-class>core.util.StringUtil</function-class>
+    	<function-signature>
+    		java.lang.String strToYearMonthFmt(java.lang.String, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>yyyyMMddhhmmss formatting</description>
+    	<name>strToDateTimeFmt</name>
+    	<function-class>core.util.StringUtil</function-class>
+    	<function-signature>
+    		java.lang.String strToDateTimeFmt(java.lang.String, java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>int Comma formatting</description>
+    	<name>intCommaFmt</name>
+    	<function-class>core.util.StringUtil</function-class>
+    	<function-signature>
+    		java.lang.String getCommaFormat(java.lang.Integer)
+    	</function-signature>
+    </function>
+    <function>
+    	<description>arrayContains</description>
+    	<name>arrayContains</name>
+    	<function-class>core.util.StringUtil</function-class>
+    	<function-signature>
+    		java.lang.boolean arrayContains(java.lang.String[], java.lang.String)
+    	</function-signature>
+    </function>
+    <function>
+    	<name>unescapeXml</name>
+    	<function-class>org.apache.commons.lang3.StringEscapeUtils</function-class>
+    	<function-signature>java.lang.String unescapeXml(java.lang.String)</function-signature>
+    </function>
+</taglib>

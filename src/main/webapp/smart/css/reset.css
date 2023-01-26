@@ -1,0 +1,74 @@
+﻿@charset 'utf-8';
+@import url(/css/nanumgothic.css);
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong,  tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color:#212121;
+  vertical-align: baseline;
+}
+
+sub, sup {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color:#212121;
+}
+html {-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%; -ms-text-size-adjust: 100%;}
+* {margin:0;padding:0;-webkit-text-size-adjust:none;outline:0;word-break:keep-all}
+html {overflow-y:auto;}
+body {color:#212121;font-size:15px;line-height: 1.6em;background-color:#fff;}
+img {border:0 none}
+a{color:#333333;text-decoration:none}
+a:hover{color:#343537;text-decoration:none;}
+ol,ul,li {list-style:none;-webkit-padding-start:0;}
+label {vertical-align:middle;}
+i,em {font-style:normal;}
+
+h1,h2,h3,h4 {font-weight:normal}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}
+table {border-collapse:collapse;border-spacing:0;}
+table caption {overflow:hidden;font-size:12px;line-height:normal;word-break:break-all; text-align:left; font-weight:600;}
+table th,table td {word-break:break-all;word-wrap:break-word;font-size:15px;}
+button {padding:0;background:0;border:0;cursor:pointer;letter-spacing:-1px;}
+button::-moz-focus-inner {border:0;padding:0;}
+fieldset {border:0;}
+legend {width:0;height:0;overflow:hidden;opacity:0;filter:alpha(opacity=0);-ms-filter:'alpha(opacity=0)';font-size:medium;line-height:normal;word-break:break-all;}
+input,select {outline:initial;color:#686868;font-size:15px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; vertical-align:middle; text-indent:7px;}
+textarea {outline:initial;color:#686868;font-size:15px; -webkit-box-sizing:border-box; -moz-box-sizing:border-box; box-sizing:border-box; vertical-align:middle; padding-left: 5px; padding-top: 5px;}
+
+/**
+스크롤 적용 2100907
+*/
+.ifrm-layout-html {
+    background:#f9f9f9;
+}
+/* 스크롤바 설정*/
+.ifrm-layout-html::-webkit-scrollbar{
+    width: 4px;
+}
+
+/* 스크롤바 막대 설정*/
+.ifrm-layout-html::-webkit-scrollbar-thumb{
+    height: 17%;
+    background-color: rgba(33,133,133,1);
+    border-radius: 10px;
+}
+
+/* 스크롤바 뒷 배경 설정*/
+.ifrm-layout-html::-webkit-scrollbar-track{
+    background-color: rgba(33,133,133,0.33);
+}

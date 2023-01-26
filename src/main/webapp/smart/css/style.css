@@ -1,0 +1,41 @@
+@charset "utf-8";
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: top;}
+/* HTML5 display-role reset for older browsers */
+article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary { display: block;}
+audio,canvas,progress,video {display: inline-block;vertical-align: top;}
+audio:not([controls]) {display: none;height: 0}
+[hidden],template {display: none}
+body {}
+ol, ul { list-style: none; }
+blockquote, q { quotes: none; }
+blockquote:before, blockquote:after, q:before, q:after { content: ''; content: none; }
+table { border-spacing: 0; }
+a {color:inherit;}
+a, a:hover, a:active, a:focus {text-decoration: none;}
+abbr[title] {border-bottom: 1px dotted}
+em, address { font-style: normal;}
+b,strong {font-weight: 500}
+small {font-size: 80%}
+img {vertical-align: top;}
+hr {box-sizing: content-box;height: 0}
+pre {overflow: auto}
+button { cursor: pointer;overflow: visible}
+button,input,optgroup,select,textarea {color: inherit; font: inherit;margin: 0;}
+button,select {text-transform: none}
+button,html input[type="button"],input[type="reset"],input[type="submit"] {-webkit-appearance: button;cursor: pointer}
+button[disabled],html input[disabled] {cursor: default}
+input {line-height: normal}
+input[type="checkbox"],input[type="radio"] {box-sizing: border-box; padding: 0;}
+input[type="number"]::-webkit-inner-spin-button,input[type="number"]::-webkit-outer-spin-button {height: auto}
+input[type="search"] {-webkit-appearance: textfield;box-sizing: content-box;}
+button::-moz-focus-inner,input::-moz-focus-inner {border: 0;padding: 0}
+button:active>*, button:focus>* { position: relative; top: 0px; left: 0px;}
+table {border-collapse: collapse;border-spacing: 0}
+td,th {padding: 0}
+html {-ms-text-size-adjust:100%; -webkit-text-size-adjust:100%; height:100%;} /* -webkit-tap-highlight-color:transparent; */
+*{-webkit-tap-highlight-color:transparent;}
+html, body {font-family: Dotum,'돋음'; font-size:13px; color:#333; line-height:1.66; font-weight:400; word-break:keep-all; line-height:1.6;}
+* {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box}
+*:before,*:after {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box}
+a:tel {text-decoration:none;}

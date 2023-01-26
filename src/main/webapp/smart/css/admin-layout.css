@@ -1,0 +1,209 @@
+﻿@charset 'utf-8';
+
+@import url(/css/font-awesome.css);
+
+*, body { margin: 0; padding: 0; }
+
+@-ms-viewport,
+@viewport {
+	width: device-width;
+}
+
+body {
+	line-height: 1.6;
+	font-weight: 400;
+	margin: 0;
+	background: #f9f9f9;
+	color: #212121;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight:normal;
+	font-size:100%;
+}
+ul, ol {
+	list-style:none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+caption, th {
+	text-align:left;
+}
+img, fieldset, abbr, acronym {
+	border:0;
+}
+fieldset{
+	display: block;
+}
+
+
+address, caption, cite, code, dfn, em, var {
+	font-style:normal;
+	font-weight:normal;
+}
+
+input.button, input.submit, button {
+	overflow:visible;
+}
+
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+
+/* remember to define focus styles! */
+:focus {
+	outline: 0;
+}
+
+section,
+header,
+footer,
+aside,
+nav {
+	display:block;
+}
+
+[hidden], command, datalist, menu[type=context], rp, source {
+	display:none;
+}
+
+
+a {
+	color:#666;
+	text-decoration:none;
+}
+a:focus,
+a:hover,
+a:active {
+	color:#151515;
+	text-decoration:none;
+}
+img {
+	vertical-align:top;
+}
+textarea, input, select, button {
+	font-family: inherit;
+	font-size: inherit;
+	vertical-align:middle;
+	border-radius: 3px;
+	color: #212121;
+}
+
+input { height: 36px; line-height: 36px; border: 1px solid #BDBDBD;}
+
+caption,
+legend,
+hr {
+	display:none;
+}
+
+/*html5 elements*/
+article,section,nav,header,footer,figure,figcaption {
+	display: block;
+}
+
+body { font-size:15px; overflow:hidden;}
+.ifrm-layout-html { backgrond-color:#f9f9f9;}
+.content-title {
+	height:31px; border:none;vertical-align:middle;color:white;
+	background: #4b545e; /* Old browsers */
+	background: -moz-linear-gradient(top,  #4b545e 18%, #323943 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(18%,#4b545e), color-stop(100%,#323943)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #4b545e 18%,#323943 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #4b545e 18%,#323943 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #4b545e 18%,#323943 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #4b545e 18%,#323943 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4b545e', endColorstr='#323943',GradientType=0 ); /* IE6-9 */
+}
+.content-title h3{
+	float:left;
+	margin:0px 10px;
+	padding:0px;
+	letter-spacing:-1px;
+	font-weight:bold;
+}
+.content-title h3 img {vertical-align:middle;}
+.content-title-text {
+	position:relative;
+	display:table-cell;
+	vertical-align:middle;
+	overflow:hidden;
+	font-size:15px;
+	margin-top: 0px;
+	color: #fff;
+	padding-top:1px;
+}
+.close  {float:right;margin:0px 10px;padding:0px;}
+.close img {border:none;vertical-align:middle;}
+.content-title, .content-title *, .content-title * * {line-height:31px;}
+
+.fa-2x {
+	font-size: 2em;
+}
+.fa {
+	position: relative;
+	display: table-cell;
+	width: 40px;
+	text-align: center;
+	vertical-align: middle;
+	font-size:20px;
+	color:#fff;
+}
+
+.content {align:center; margin:auto; border:none; min-height:200px;height:auto;overflow-x:hidden;overflow-y:auto;}
+.content article {height:100%; clear:both; margin-bottom:10px;}
+.content article:first-child {height:90%;clear:both;}
+.content article:nth-last-child(1) {height:auto;}
+
+.block {margin:0px 0px; padding:0px;border:none;}
+.full-right { text-align:right !important; }
+
+
+/*220613 */
+.fileForm { padding: 4px 0;}
+.fileForm .fileItem { padding: 4px 0;}
+.fileForm .fileItem:hover{ color: #0071DA;  background-color: #FFF8E1;}
+.fileForm .fileItem a { color: #212121;}
+.fileForm .fileItem a:before {content:''; opacity: 0.8; display:inline-block; width:18px; height:18px; margin:0 4px; background: url('../../images/icon_fileList_leading.png') no-repeat; transform: translateY(2px); transition: all .3s}
+.fileForm .fileItem:hover a:before { opacity: 1;}
+
+.fileForm.select input[type="file"] { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip:rect(0,0,0,0); border: 0; }
+
+.fileForm.select .fileName {
+  display: inline-block;
+  margin-right: 2px;
+  padding: 8px 12px;
+  background-color: #333C4D;
+  color: #fff;
+  font-size: inherit;
+  line-height: normal;
+  vertical-align: middle;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+/* named upload */
+.fileForm.select .uploadName {
+  display: inline-block;
+  padding: 8px 12px;  /* label의 패딩값과 일치 */
+  font-size: inherit;
+  font-family: inherit;
+  width: 300px;
+  line-height: normal;
+  vertical-align: middle;
+  background-color: #fff;
+  border: 1px solid #bebebe;
+  border-radius: 3px;
+  -webkit-appearance: none; -moz-appearance: none; appearance: none;/* 네이티브 외형 감추기 */
+}
+
+

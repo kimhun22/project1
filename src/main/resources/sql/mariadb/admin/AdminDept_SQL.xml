@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.system.deptInfo.mapper.AdminDeptMapper">
+
+    <sql id="deptSql">
+       <if test="searchKeyword != null and searchKeyword != ''">
+            AND DEPT_NM LIKE CONCAT('%' , #{searchKeyword} , '%')
+       </if>
+      <if test="searchCondition == 'upperDeptCode'">
+      	    <if test="upperDeptCode != null and upperDeptCode != ''">
+           AND UPPER_DEPT_CODE LIKE CONCAT('%' , #{upperDeptCode} , '%')
+           </if>
+       </if>
+    </sql>
+
+     <sql id="selectDeptSql">
+       <if test="searchKeyword != null and searchKeyword != ''">
+            WHERE
+            			   HM_SITE_CODE = #{hmSiteCode}
+                 AND DEPT_NM LIKE CONCAT('%' , #{searchKeyword} , '%')
+       </if>
+    </sql>
+    <select id="selectDeptListCnt" parameterType="TnDeptTbVO" resultType="int">
+        SELECT
+                        COUNT(*) cnt
+        FROM
+                       TN_DEPT_TB
+        WHERE
+        			    HM_SITE_CODE = #{hmSiteCode}
+        <include refid="deptSql"/>
+    </select>
+
+    <select id="selectDeptList" parameterType="TnDeptTbVO" resultType="TnDeptTbVO">
+        SELECT
+            A.*
+        FROM
+            (SELECT ROW_NUMBER() OVER (ORDER BY UPPER_DEPT_CODE ASC, SORT_ORDR ASC) AS rn
+                  , ROW_NUMBER() OVER (ORDER BY UPPER_DEPT_CODE DESC, SORT_ORDR DESC) AS rnum
+                  , T1.*
+            FROM
+                			TN_DEPT_TB T1
+            WHERE
+            			    HM_SITE_CODE = #{hmSiteCode}
+                <include refid="deptSql"/>
+                  ORDER BY DEPT_CODE ASC
+            ) A
+        WHERE
+            A.rn BETWEEN #{firstIndex} AND #{lastIndex}
+    </select>
+
+    <select id="selectDeptDetail" parameterType="TnDeptTbVO" resultType="TnDeptTbVO">
+	    SELECT
+	        			*
+	    FROM
+	        			TN_DEPT_TB
+	    WHERE
+	    			   HM_SITE_CODE = #{hmSiteCode}
+	         AND DEPT_CODE = #{deptCode}
+    </select>
+
+</mapper>

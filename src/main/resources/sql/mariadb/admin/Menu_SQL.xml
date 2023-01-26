@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.system.menu.mapper.MenuMapper">
+<!-- 목록 조회 -->
+	<select id="selectMenuList" parameterType="TsMenuTbExVO" resultType="TsMenuTbExVO" >
+				SELECT * FROM
+				 (
+				    SELECT *, CONCAT(     T1.DEPTH    ,'^' ,   T1.SORT_ORDR) DEPTH_SORT FROM
+							(
+								  WITH RECURSIVE MENU  AS
+								  (
+								    SELECT     *
+								               , 1 AS DEPTH
+								    FROM  TS_MENU_TB
+								    WHERE
+								    			  HM_SITE_CODE = #{hmSiteCode}
+								    	AND UPPER_MENU_CODE = '000'
+								    UNION ALL
+
+								    SELECT     SUB.*
+								              , 1+DEPTH AS DEPTH
+								    FROM       TS_MENU_TB SUB
+								    INNER JOIN MENU
+								    ON SUB.UPPER_MENU_CODE = MENU.MENU_CODE
+								  )
+								  SELECT * FROM MENU
+				           ORDER BY SORT_ORDR
+							) T1
+						WHERE
+							     T1.HM_SITE_CODE = #{hmSiteCode}
+							 AND DELETE_AT = '0'
+						ORDER BY T1.MENU_CODE ASC , T1.SORT_ORDR ASC
+				    ) aa
+				    ORDER BY DEPTH , cast(SORT_ORDR as unsigned)
+		</select>
+
+	<!-- 상세 조회 -->
+	<select id="selectMenu" parameterType="TsMenuTbExVO" resultType="TsMenuTbExVO">
+		SELECT
+					  HM_SITE_CODE
+					, UPPER_MENU_CODE
+					, (SELECT MENU_NM FROM TS_MENU_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND MENU_CODE = T1.UPPER_MENU_CODE) AS UPPER_MENU_NM
+					, (SELECT USE_AT FROM TS_MENU_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND MENU_CODE = T1.UPPER_MENU_CODE) AS UPPER_USE_AT
+					, MENU_CODE
+					, MENU_NM
+					, SORT_ORDR
+					, MENU_URL
+					, RM
+					, (SELECT COUNT(*) FROM TS_MENU_TB WHERE HM_SITE_CODE = #{hmSiteCode} AND  UPPER_MENU_CODE = T1.MENU_CODE AND DELETE_AT = '0') AS CHILD_CNT
+					, USE_AT
+					, DELETE_AT
+					, REGIST_USER_ID
+					, UPDATE_USER_ID
+					, REGIST_DT
+					, UPDATE_DT
+					, NEW_WINDOW_AT
+		FROM
+			TS_MENU_TB T1
+		WHERE
+					  T1.HM_SITE_CODE = #{hmSiteCode}
+			 AND T1.UPPER_MENU_CODE = #{upperMenuCode}
+			 AND T1.MENU_CODE = #{menuCode}
+	</select>
+
+	<!-- 하위 코드 목록 조회 -->
+	<select id="selectSubMenuList" parameterType="TsMenuTbExVO" resultType="TsMenuTbExVO">
+		SELECT
+						*
+		FROM
+						TS_MENU_TB
+		WHERE
+					  HM_SITE_CODE = #{hmSiteCode}
+			AND DELETE_AT = '0'
+			AND UPPER_MENU_CODE = #{menuCode}
+    </select>
+
+	<!-- 다음 코드 순서 조회 -->
+	<select id="selectNextMenuOrd" parameterType="TsMenuTbExVO" resultType="Integer">
+		SELECT
+						IFNULL(MAX(SORT_ORDR), 0 )+1 SORT_ORDR FROM TS_MENU_TB
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+			 AND DELETE_AT = '0'
+		     AND UPPER_MENU_CODE = #{menuCode}
+	</select>
+
+	<!-- 다음 코드 조회 -->
+	<select id="selectNextMenuId" parameterType="TsMenuTbExVO" resultType="String">
+		SELECT
+			<if test="menuCode != 'ROOT'"> CONCAT (#{menuCode} , LPAD(NEXT_MENU_CODE, 3, '0') )</if>
+			<if test="menuCode eq 'ROOT'"> LPAD(NEXT_MENU_CODE, 3, '0') </if>
+		FROM (
+			SELECT
+				IFNULL( MAX( SUBSTR( MENU_CODE, LENGTH(MENU_CODE)-2 ) ), 0 ) + 1 AS NEXT_MENU_CODE
+			FROM
+				TS_MENU_TB
+			WHERE
+						   HM_SITE_CODE = #{hmSiteCode}
+				 AND UPPER_MENU_CODE = #{menuCode}
+		) T1
+	</select>
+
+	<!-- 등록 -->
+	<insert id="insertMenu" parameterType="TsMenuTbExVO">
+		INSERT INTO TS_MENU_TB (
+			  HM_SITE_CODE
+			, UPPER_MENU_CODE
+			, MENU_CODE
+			, MENU_NM
+			, SORT_ORDR
+			, MENU_URL
+			, RM
+			, USE_AT
+			, DELETE_AT
+			, REGIST_USER_ID
+			, UPDATE_USER_ID
+			, REGIST_DT
+			, UPDATE_DT
+			, NEW_WINDOW_AT
+		) VALUES (
+			   #{hmSiteCode}
+			, #{upperMenuCode}
+			, #{menuCode}
+			, #{menuNm}
+			, #{sortOrdr}
+			, #{menuUrl}
+			, #{rm}
+			, #{useAt}
+			, '0'
+			, #{registUserId}
+			, #{updateUserId}
+			, NOW()
+			, NOW()
+			, NVL(#{newWindowAt}, '0')
+        )
+	</insert>
+
+	<!-- 수정 -->
+	<update id="updateMenu" parameterType="TsMenuTbExVO">
+		UPDATE
+			TS_MENU_TB
+		SET
+			MENU_NM = #{menuNm}
+			, SORT_ORDR = #{sortOrdr}
+			, MENU_URL = #{menuUrl}
+			, RM = #{rm}
+			, USE_AT = #{useAt}
+			, NEW_WINDOW_AT = #{newWindowAt}
+			, UPDATE_DT = NOW()
+			, UPDATE_USER_ID = #{updateUserId}
+		WHERE
+					   HM_SITE_CODE = #{hmSiteCode}
+			 AND UPPER_MENU_CODE = #{upperMenuCode}
+			 AND MENU_CODE = #{menuCode}
+	</update>
+
+    <!--  삭제   -->
+    <update id="deleteMenu" parameterType="TsMenuTbExVO">
+		UPDATE
+						TS_MENU_TB
+				SET
+						DELETE_AT = '1'
+						, UPDATE_DT = NOW()
+						, UPDATE_USER_ID = #{updateUserId}
+		 WHERE
+		 				HM_SITE_CODE = #{hmSiteCode}
+			  AND UPPER_MENU_CODE = #{upperMenuCode}
+			  AND MENU_CODE = #{menuCode}
+    </update>
+
+</mapper>

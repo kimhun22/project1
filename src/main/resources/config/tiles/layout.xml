@@ -1,0 +1,66 @@
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<!-- 로그인 페이지 -->
+<!-- 	<definition name="login" template="/WEB-INF/jsp/common/_layout/login/login.jsp">
+    	<put-attribute name="content" value="" />
+    	<put-attribute name="footer" value="/WEB-INF/jsp/common/_layout/login/footer.jsp" />
+    </definition>
+
+	<definition name="admin/*.login" extends="login">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}.jsp" />
+    </definition>
+    <definition name="admin/*/*.login" extends="login">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}.jsp" />
+    </definition> -->
+
+      <!-- 프레임 페이지 -->
+    <definition name="frame" template="/WEB-INF/jsp/common/_layout/frame/layout.jsp">
+    	<put-attribute name="top" value="/WEB-INF/jsp/common/_layout/frame/top.jsp" />
+    	<put-attribute name="left" value="/WEB-INF/jsp/common/_layout/frame/left.jsp" />
+    	<put-attribute name="title" value="/WEB-INF/jsp/common/_layout/frame/title.jsp" />
+    	<put-attribute name="sub" value="/WEB-INF/jsp/common/_layout/frame/sub.jsp" />
+    	<put-attribute name="content" value="" />
+    	<put-attribute name="tab" value="/WEB-INF/jsp/common/_layout/frame/tab.jsp" />
+    </definition>
+
+    <definition name="*.frame" extends="frame">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}.jsp" />
+    </definition>
+    <definition name="*/*.frame" extends="frame">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}.jsp" />
+    </definition>
+    <definition name="*/*/*.frame" extends="frame">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" />
+    </definition>
+    <definition name="*/*/*/**.frame" extends="frame">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}.jsp" />
+    </definition>
+	<definition name="*/*/*/*/**.frame" extends="frame">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}/{5}.jsp" />
+    </definition>
+
+	<!-- 컨텐츠 페이지 -->
+    <definition name="cn" template="/WEB-INF/jsp/common/_layout/cn/layout.jsp">
+    	<put-attribute name="content" value="" />
+    </definition>
+
+    <definition name="*.cn" extends="cn">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}.jsp" />
+    </definition>
+    <definition name="*/*.cn" extends="cn">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}.jsp" />
+    </definition>
+    <definition name="*/*/*.cn" extends="cn">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}.jsp" />
+    </definition>
+    <definition name="*/*/*/**.cn" extends="cn">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}.jsp" />
+    </definition>
+    <definition name="*/*/*/*/**.cn" extends="cn">
+    	<put-attribute name="content" value="/WEB-INF/jsp/{1}/{2}/{3}/{4}/{5}.jsp" />
+    </definition>
+
+
+</tiles-definitions>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.heartmedia.common.com.mapper.CommonMapper">
+<!-- 	<cache eviction="FIFO" flushInterval="600000" size="1024" readOnly="true"/> -->
+	<sql id="searchDeptNm">
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+				AND DEPT_NM LIKE CONCAT('%' , #{searchKeyword} , '%')
+            </if>
+        </where>
+    </sql>
+
+	<!-- 쿼리명 : 부서 목록 조회 -->
+	<select id="selectDepartmentList" resultType="loginVO">
+		<![CDATA[
+	         	SELECT
+			         		  DEPT_CODE AS PART_CODE
+			         		, DEPT_NM AS PART_NAME
+	         	FROM
+	         		TN_DEPT_TB
+	         	WHERE
+	         	    		  HM_SITE_CODE = #{hmSiteCode}
+	         		AND UPPER_DEPT_CODE ='55300000000'
+	         		OR UPPER_DEPT_CODE = '64100000000'
+		]]>
+	</select>
+
+
+
+
+</mapper>

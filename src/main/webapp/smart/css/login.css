@@ -1,0 +1,35 @@
+@charset 'utf-8';
+@import url(/css/nanumgothic.css);
+
+
+#login {background: url(../images/login_bg_line.gif) left bottom repeat-x #eaf1f4;}
+#login .login_box {width:599px; height:366px; margin:0 auto; background:url(../images/login_box.png) no-repeat; margin-top:75px;}
+#login .login_bg {background:url(../images/login_bg.gif) center bottom no-repeat; height:573px;}
+
+
+#login .cont {width:330px; padding-top:165px; padding-left:230px;}
+
+#login .input_area, #login .btn_login {display:inline-block; vertical-align:top;}
+#login .input_area {width:70%; }
+#login .btn_login {width:30%; margin-left:10px;}
+
+#login .input_area dt {width:35%; display:inline-block; margin-bottom:7px; text-align:right; padding-right:7px; color:#fff; font-weight:600; font-size:14px; font-family: Dotum,'돋음';}
+#login .input_area dd {width:125px; display:inline-block; margin-bottom:7px;}
+
+#login .input_area dd input {background-color: #e9f9ff; border:0; height:25px; line-height:25px; text-indent:10px;}
+#login .btn_login {width:69px; height:61px; color:#FFF; font-weight:600; font-family:Dotum,'돋음'; font-size:16px; background:url(../images/login_btn.png) no-repeat; display:inline-block; line-height:61px; text-align:center; text-shadow: #8e640f 0px 0px 2px; -webkit-font-smoothing: antialiased;}
+
+#login .check {margin-left:91px; color:#b0c4cc; font-weight:bold; padding-top:5px;}
+
+#login .btn_user {
+	background: #345fbe;
+	background: -moz-linear-gradient(top, #345fbe 0%, #20499d 100%);
+	background: -webkit-gradient(left top, left bottom, color-stop(0%, #345fbe), color-stop(100%, #20499d));
+	background: -webkit-linear-gradient(top, #345fbe 0%, #20499d 100%);
+	background: -o-linear-gradient(top, #345fbe 0%, #20499d 100%);
+	background: -ms-linear-gradient(top, #345fbe 0%, #20499d 100%);
+	background: linear-gradient(to bottom, #345fbe 0%, #20499d 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#20499d', endColorstr='#345fbe', GradientType=0 );
+	color:#91bbe6; border:1px solid #0c3082; display:inline-block; padding:5px 10px; margin-top:20px; margin-left:240px; font-weight:600;
+}
+#login .btn_user:hover {color:#fff;}
